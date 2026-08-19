@@ -1,0 +1,105 @@
+version: 2
+
+models:
+
+  - name: stg_customers
+    description: "Cleaned and renamed customer master data with derived columns"
+    columns:
+      - name: CUSTOMER_ID
+        description: "Primary key — unique customer identifier"
+        tests: [unique, not_null]
+      - name: CUSTOMER_FULL_NAME
+        description: "Derived — first name + last name concatenated"
+        tests: [not_null]
+      - name: CUSTOMER_EMAIL
+        tests: [not_null]
+      - name: LOYALTY_TIER
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Bronze', 'Silver', 'Gold', 'Platinum']
+      - name: IS_ACTIVE
+        tests: [not_null]
+      - name: SIGNUP_DATE
+        tests: [not_null]
+      - name: DAYS_SINCE_SIGNUP
+        description: "Derived — days between signup date and today"
+
+  - name: stg_products
+    description: "Cleaned product catalog with derived margin metrics"
+    columns:
+      - name: PRODUCT_ID
+        description: "Primary key — unique product identifier"
+        tests: [unique, not_null]
+      - name: PRODUCT_NAME
+        tests: [not_null]
+      - name: CATEGORY
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Smartphones', 'Laptops', 'Headphones',
+                       'TVs', 'Cameras', 'Accessories', 'Storage']
+      - name: UNIT_PRICE
+        tests: [not_null]
+      - name: COST_PRICE
+        tests: [not_null]
+      - name: PROFIT_PER_UNIT
+        description: "Derived — unit_price minus cost_price"
+      - name: MARGIN_PCT
+        description: "Derived — profit as percentage of unit price"
+      - name: IS_ACTIVE
+        tests: [not_null]
+
+  - name: stg_orders
+    description: "Incremental staging model for order headers — new rows every 10 mins"
+    columns:
+      - name: ORDER_ID
+        description: "Primary key — unique order identifier"
+        tests: [unique, not_null]
+      - name: CUSTOMER_ID
+        description: "Foreign key to stg_customers"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: CUSTOMER_ID
+      - name: ORDER_DATE
+        tests: [not_null]
+      - name: ORDER_STATUS
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['PENDING', 'PROCESSING', 'DELIVERED', 'CANCELLED']
+      - name: TOTAL_AMOUNT
+        tests: [not_null]
+      - name: ORDER_MONTH
+        description: "Derived — date truncated to first day of month"
+      - name: ORDER_YEAR
+        description: "Derived — year extracted from order_date"
+
+  - name: stg_order_items
+    description: "Incremental staging model for order line items"
+    columns:
+      - name: ORDER_ITEM_ID
+        description: "Primary key — unique order item identifier"
+        tests: [unique, not_null]
+      - name: ORDER_ID
+        description: "Foreign key to stg_orders"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: ORDER_ID
+      - name: PRODUCT_ID
+        description: "Foreign key to stg_products"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: PRODUCT_ID
+      - name: QUANTITY
+        tests: [not_null]
+      - name: LINE_TOTAL
+        tests: [not_null]
+      - name: EFFECTIVE_LINE_TOTAL
+        description: "Derived — line_total minus discount_amount"
