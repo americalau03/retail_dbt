@@ -1,0 +1,6 @@
+SELECT
+    ORDER_ID,
+    TOTAL_AMOUNT,
+    DISCOUNT_AMOUNT
+FROM {{ ref('stg_orders') }}
+WHERE TOTAL_AMOUNT <= 0
