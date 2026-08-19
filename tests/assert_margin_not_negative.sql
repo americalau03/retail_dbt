@@ -1,0 +1,8 @@
+SELECT
+    PRODUCT_ID,
+    PRODUCT_NAME,
+    UNIT_PRICE,
+    COST_PRICE,
+    MARGIN_PCT
+FROM {{ ref('stg_products') }}
+WHERE MARGIN_PCT < 0
