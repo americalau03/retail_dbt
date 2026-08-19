@@ -1,0 +1,39 @@
+name: retail_dbt
+version: 1.0.0
+config-version: 2
+
+profile: retail_dbt
+
+model-paths:    ["models"]
+seed-paths:     ["seeds"]
+test-paths:     ["tests"]
+analysis-paths: ["analyses"]
+macro-paths:    ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  retail_dbt:
+
+    staging:
+      +schema:       staging
+      +materialized: view
+
+    intermediate:
+      +schema:       intermediate
+      +materialized: view
+
+    marts:
+      +schema:       marts
+      +materialized: table
+
+seeds:
+  retail_dbt:
+    +schema: raw
+
+snapshots:
+  retail_dbt:
+    +schema: snapshots

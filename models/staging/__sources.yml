@@ -1,0 +1,116 @@
+version: 2
+
+sources:
+  - name: retail_raw
+    database: RETAIL_DBT_DB
+    schema: DEV_RAW
+    description: "Raw retail electronics data for India market"
+
+    tables:
+
+      - name: CUSTOMERS
+        description: "Customer master data with loyalty tier information"
+        loaded_at_field: _LOADED_AT
+        freshness:
+          warn_after:  {count: 60,  period: minute}
+          error_after: {count: 120, period: minute}
+        columns:
+          - name: CUSTOMER_ID
+            description: "Primary key — unique customer identifier"
+            tests:
+              - unique
+              - not_null
+          - name: LOYALTY_TIER
+            description: "Customer loyalty tier"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['Bronze', 'Silver', 'Gold', 'Platinum']
+          - name: IS_ACTIVE
+            tests:
+              - not_null
+
+      - name: PRODUCTS
+        description: "Electronics product catalog"
+        loaded_at_field: _LOADED_AT
+        freshness:
+          warn_after:  {count: 60,  period: minute}
+          error_after: {count: 120, period: minute}
+        columns:
+          - name: PRODUCT_ID
+            description: "Primary key — unique product identifier"
+            tests:
+              - unique
+              - not_null
+          - name: CATEGORY
+            description: "Product category"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['Smartphones', 'Laptops', 'Headphones',
+                           'TVs', 'Cameras', 'Accessories', 'Storage']
+          - name: UNIT_PRICE
+            tests:
+              - not_null
+          - name: COST_PRICE
+            tests:
+              - not_null
+
+      - name: ORDERS
+        description: "Order headers — new rows arrive every 10 minutes via Task"
+        loaded_at_field: _LOADED_AT
+        freshness:
+          warn_after:  {count: 20, period: minute}
+          error_after: {count: 60, period: minute}
+        columns:
+          - name: ORDER_ID
+            description: "Primary key — unique order identifier"
+            tests:
+              - unique
+              - not_null
+          - name: CUSTOMER_ID
+            description: "Foreign key to CUSTOMERS"
+            tests:
+              - not_null
+          - name: ORDER_DATE
+            tests:
+              - not_null
+          - name: ORDER_STATUS
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['PENDING', 'PROCESSING', 'DELIVERED', 'CANCELLED']
+
+      - name: ORDER_ITEMS
+        description: "Order line items — one row per product per order"
+        loaded_at_field: _LOADED_AT
+        freshness:
+          warn_after:  {count: 20, period: minute}
+          error_after: {count: 60, period: minute}
+        columns:
+          - name: ORDER_ITEM_ID
+            description: "Primary key — unique order item identifier"
+            tests:
+              - unique
+              - not_null
+          - name: ORDER_ID
+            description: "Foreign key to ORDERS"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('retail_raw', 'ORDERS')
+                  field: ORDER_ID
+          - name: PRODUCT_ID
+            description: "Foreign key to PRODUCTS"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('retail_raw', 'PRODUCTS')
+                  field: PRODUCT_ID
+          - name: QUANTITY
+            tests:
+              - not_null
+          - name: LINE_TOTAL
+            tests:
+              - not_null
+

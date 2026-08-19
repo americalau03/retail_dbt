@@ -1,0 +1,21 @@
+product_id,product_name,category,subcategory,unit_price,cost_price,is_active
+P001,iPhone 15,Smartphones,Apple,74999,62000,true
+P002,Samsung Galaxy S24,Smartphones,Samsung,69999,58000,true
+P003,OnePlus 12,Smartphones,OnePlus,54999,45000,true
+P004,Redmi Note 13 Pro,Smartphones,Xiaomi,26999,21000,true
+P005,MacBook Air M2,Laptops,Apple,114900,95000,true
+P006,Dell XPS 13,Laptops,Dell,109900,89000,true
+P007,Lenovo ThinkPad E14,Laptops,Lenovo,72999,59000,true
+P008,HP Pavilion 15,Laptops,HP,61999,50000,true
+P009,Sony WH-1000XM5,Headphones,Sony,26990,20000,true
+P010,Boat Rockerz 450,Headphones,Boat,1499,800,true
+P011,JBL Tune 760NC,Headphones,JBL,5999,4000,true
+P012,Apple AirPods Pro,Headphones,Apple,24900,18000,true
+P013,Samsung 55 QLED TV,TVs,Samsung,84999,68000,true
+P014,LG 43 4K TV,TVs,LG,41999,33000,true
+P015,Mi 32 HD TV,TVs,Xiaomi,14999,11000,true
+P016,Canon EOS R50,Cameras,Canon,64999,52000,true
+P017,GoPro Hero 12,Cameras,GoPro,34999,27000,true
+P018,Logitech MX Master 3,Accessories,Logitech,8995,6500,true
+P019,Anker 65W Charger,Accessories,Anker,2499,1500,true
+P020,Samsung T7 SSD 1TB,Storage,Samsung,8499,6500,true
