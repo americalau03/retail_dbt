@@ -36,7 +36,8 @@ segmented AS (
         -- Customer Value Score (simple composite)
         ROUND(
             (TOTAL_SPEND / NULLIF(DAYS_SINCE_SIGNUP, 0)) * 30
-        , 2)                                AS monthly_value_score
+        , 2)                                AS monthly_value_score,
+         {{ tier_score('LOYALTY_TIER') }}    AS loyalty_score
 
     FROM customer_orders
 
