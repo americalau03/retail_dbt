@@ -1,0 +1,33 @@
+deploy_dbt_retail:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: ll26213.us-east-2.aws
+
+      # User/password auth
+      user: dbt_user1
+      password: doe
+
+      role: DBT_DEVELOPER
+      database: RETAIL_DBT_DB
+      warehouse: DBT_WAREHOUSE
+      # in the future you should switch this schema to use a new environment variable
+      # definitely switch this to your schema though
+      schema: DEV
+      threads: 4
+      client_session_keep_alive: False
+    prod:
+      type: snowflake
+      account: ll26213.us-east-2.aws
+
+      # User/password auth
+      user: dbt_user1
+      password: doe
+
+      role: DBT_DEVELOPER
+      database: RETAIL_DBT_DB
+      warehouse: DBT_WAREHOUSE
+      schema: PRODUCTION
+      threads: 4
+      client_session_keep_alive: False
