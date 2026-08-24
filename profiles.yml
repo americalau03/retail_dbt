@@ -1,4 +1,4 @@
-retail_dbt:
+deploy_retail_dbt:
   target: dev
   outputs:
     dev:
